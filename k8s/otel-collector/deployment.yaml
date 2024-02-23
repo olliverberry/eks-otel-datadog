@@ -1,0 +1,88 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otel-collector-config
+data:
+  collector.yaml: |
+    receivers:
+      otlp:
+        protocols: 
+          grpc:
+    processors:
+    exporters:
+      datadog:
+        api:
+          key: ${env:DD_API_KEY}
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: []
+          exporters: [datadog]
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: otel-collector
+  name: otel-collector-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: otel-collector
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: otel-collector
+    spec:
+      containers:
+      - image: otel/opentelemetry-collector-contrib
+        name: opentelemetry-collector-contrib
+        command:
+        - "/otelcol-contrib"
+        - "--config=/conf/collector.yaml"
+        volumeMounts:
+        - mountPath: /conf
+          name: otel-collector-config
+        env:
+          - name: DD_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: dd-secrets
+                key: dd-api-key
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "1Gb"
+      tolerations:
+      - key: "tier"
+        operator: "Equal"
+        value: "otel-collector"
+        effect: "NoSchedule"
+      volumes:
+      - configMap:
+          items:
+          - key: collector.yaml
+            path: collector.yaml
+          name: otel-collector-config
+        name: otel-collector-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: otel-collector
+  name: otel-collector-svc
+spec:
+  ports:
+  - port: 4317
+    protocol: TCP
+    targetPort: 4317
+  selector:
+    app: otel-collector
+  type: ClusterIP

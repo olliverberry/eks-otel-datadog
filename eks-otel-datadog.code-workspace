@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "nodejs-app"
+		},
+		{
+			"path": "ruby-app"
+		},
+		{
+			"path": "scripts"
+		},
+		{
+			"path": "k8s"
+		}
+	],
+	"settings": {}
+}
