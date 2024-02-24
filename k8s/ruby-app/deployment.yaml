@@ -56,6 +56,11 @@ spec:
           value: "ruby-app"
         - name: OTEL_RESOURCE_ATTRIBUTES
           value: "host.name=$(NODE_NAME),deployment.environment=$(DD_ENV),service.name=$(DD_SERVICE)"
+        - name: SECRET_KEY_BASE
+          valueFrom:
+            secretKeyRef:
+              name: ruby-app-secrets
+              key: secret-key-base
       - image: nginx
         name: nginx
         command:
