@@ -50,8 +50,12 @@ spec:
               fieldPath: spec.nodeName
         - name: OTEL_TRACES_EXPORTER
           value: "otlp"
+        - name: DD_ENV
+          value: "dev"
+        - name: DD_SERVICE
+          value: "ruby-app"
         - name: OTEL_RESOURCE_ATTRIBUTES
-          value: "host.name=$(NODE_NAME)"
+          value: "host.name=$(NODE_NAME),deployment.environment=$(DD_ENV),service.name=$(DD_SERVICE)"
       - image: nginx
         name: nginx
         command:

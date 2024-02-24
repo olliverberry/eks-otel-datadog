@@ -50,6 +50,12 @@ spec:
           value: "grpc"
         - name: NODE_OPTIONS
           value: "--require @opentelemetry/auto-instrumentations-node/register"
+        - name: DD_ENV
+          value: "dev"
+        - name: DD_SERVICE
+          value: "nodejs-app"
+        - name: OTEL_RESOURCE_ATTRIBUTES
+          value: "deployment.environment=$(DD_ENV),service.name=$(DD_SERVICE)"
       - image: nginx
         name: nginx
         command:
