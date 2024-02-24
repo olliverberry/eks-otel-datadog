@@ -54,10 +54,6 @@ spec:
               secretKeyRef:
                 name: dd-secrets
                 key: dd-api-key
-        resources:
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
       tolerations:
       - key: "tier"
         operator: "Equal"

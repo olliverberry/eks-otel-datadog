@@ -50,20 +50,12 @@ spec:
           value: "grpc"
         - name: NODE_OPTIONS
           value: "--require @opentelemetry/auto-instrumentations-node/register"
-        resources:
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
       - image: nginx
         name: nginx
         command:
         - "sh"
         - "-c"
         - "while true; do curl -s http://localhost:8080/rolldice; sleep 1; done"
-        resources:
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
       - image: otel/opentelemetry-collector
         name: agent
         args:
@@ -74,10 +66,6 @@ spec:
         volumeMounts:
         - mountPath: /conf
           name: agent-config
-        resources:
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
       volumes:
        - configMap:
            items:

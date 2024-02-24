@@ -52,20 +52,12 @@ spec:
           value: "otlp"
         - name: OTEL_RESOURCE_ATTRIBUTES
           value: "host.name=$(NODE_NAME)"
-        resources:
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
       - image: nginx
         name: nginx
         command:
         - "sh"
         - "-c"
         - "while true; do curl -s http://localhost:3000/rolldice; sleep 1; done"
-        resources:
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
       - image: otel/opentelemetry-collector
         name: agent
         args:
@@ -76,10 +68,6 @@ spec:
         volumeMounts:
         - mountPath: /conf
           name: agent-config
-        resources:
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
       volumes:
        - configMap:
            items:
